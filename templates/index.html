@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Third Ear Prototype</title>
+</head>
+<body>
+    <h1> Third Ear Prototype </h1>
+    <div class="controls">
+        <p>Select sample audio to process:</p>
+        <button id="process-audio-btn">Process Sample Audio 1</button>
+    </div>
+    <div class="transcripts-container side-by-side-container">
+        <div class="transcript-box">
+            <h2>Raw Transcript (STT)</h2>
+            <textarea id="raw-transcript-area" class="transcript-content" readonly></textarea>
+        </div>
+        <div class="transcript-box">
+            <h2>Corrected Transcription (NLP)</h2>
+            <textarea id="corrected-transcript-area" class="transcript-content" readonly></textarea>
+        </div>
+    </div>
+    <hr class="section-divider">
+    <div class="interleaved-container">
+        <h2>Interleaved Conversation View</h2>
+        <div id="interleaved-bubbles-content" class="transcript-content bubble-area"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
