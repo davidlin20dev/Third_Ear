@@ -23,62 +23,64 @@ document.addEventListener('DOMContentLoaded', () => {
         interleavedContainer.scrollTop = interleavedContainer.scrollHeight;
     }
 
+    // WebSocket Connection
+    const socket = io();
+
+    socket.on('connect', () => {
+        console.log('WebSocket connected! Socket ID:', socket.id);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('WebSocket disconnected.')
+    })
+
+    socket.on('response', (msg) => {
+        console.log('Server response:', msg)
+    })
+
+    // WebSocket Event Listeners for transcripts
+    socket.on('raw_transcript_update', (data) => {
+        console.log('Received raw:', data.text);
+        appendToTextarea(rawTranscriptArea, "Raw: " + data.text);
+        addBubble(data.text, 'raw');
+    })
+
+    socket.on('corrected_transcript_update', (data) => {
+        console.log('Received corrected:', data.text);
+        appendToTextarea(correctedTranscriptArea, "Corrected: " + data.text);
+        addBubble(data.text, 'corrected');
+    });
+
+    socket.on('processing_finished', (data) => {
+        console.log('Processing finished: ', data.status)
+        processButton.disabled = false;
+        processButton.textContent = "Process Sample Audio 1";
+    })
+
+    socket.on('processing_error', (data) => {
+        console.error('Processing error:', data.error);
+        alert("An error occurred during processing: " + data.error);
+        processButton.disable = false;
+        processButton.textContent = "Process Sample Audio 1"
+    })
+
     // Event listener for the button
     if (processButton) {
         processButton.addEventListener('click', () => {
             console.log("Process Audio button clicked");
 
-            rawTranscriptArea.value = '';
-            correctedTranscriptArea.value = '';
-            interleavedContainer.innerHTML = '';
-            lastRawText = null;
+            if (rawTranscriptArea) rawTranscriptArea.value = '';
+            if (correctedTranscriptArea) correctedTranscriptArea.value = '';
+            if (interleavedContainer) interleavedContainer.innerHTML = '';
 
-            // Simulation
-            console.log("Simulating transcript data...")
+            processButton.disabled = true;
+            processButton.textContent = "Processing...";
 
-            setTimeout(() => {
-                const raw1 = "Hi, uhm it it custom servicer?"
-                appendToTextarea(rawTranscriptArea, "Raw: " + raw1);
-                addBubble(raw1, 'raw');
-                lastRawText = raw1;
-            }, 500);
-
-            setTimeout(() => {
-                const corrected1 = "Hi, is it customer service?";
-                appendToTextarea(correctedTranscriptArea, "Correct: " + corrected1);
-                if (lastRawText === "Hi, uhm it it custom servicer?") {
-                    addBubble(corrected1, 'correct1');
-                }
-            }, 1000);
-
-            setTimeout(() => {
-                const raw2 = "Yes I needing help with my account";
-                appendToTextarea(rawTranscriptArea, "Raw: " + raw2);
-                addBubble(raw2, 'raw');
-                lastRawText = raw2;
-            }, 1500);
-
-            setTimeout(() => {
-                const corrected2 = "Yes, I need help with my account.";
-                appendToTextarea(correctedTranscriptArea, "Corrected: " + corrected2);
-                 if (lastRawText === "Yes I needing help with my account") {
-                    addBubble(corrected2, 'corrected');
-                 }
-            }, 2000);
-             setTimeout(() => {
-                const raw3 = "the billing is incorrect i think";
-                appendToTextarea(rawTranscriptArea, "Raw: " + raw3);
-                addBubble(raw3, 'raw');
-                lastRawText = raw3;
-            }, 2500);
-
-            setTimeout(() => {
-                const corrected3 = "I think the billing is incorrect.";
-                appendToTextarea(correctedTranscriptArea, "Corrected: " + corrected3);
-                 if (lastRawText === "the billing is incorrect i think") {
-                    addBubble(corrected3, 'corrected');
-                 }
-            }, 3000);
+            const sampleToProcess = 'sample1';
+            console.log(`Emitting start_processing for ${sampleToProcess}`);
+            socket.emit('start_processing', { audio_sample: sampleToProcess})
         })
+    } else {
+        console.log("Process button not found")
     }
 });
