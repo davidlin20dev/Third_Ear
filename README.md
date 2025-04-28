@@ -35,5 +35,7 @@ This prototype simulates this dual-display functionality using a pre-recorded au
 
 
 ## Demo
-https://github.com/user-attachments/assets/b4196e81-1b67-44af-a3ad-a9912001fa78
+https://github.com/user-attachments/assets/bcac6ac5-7b86-4c3f-a3cb-4829c5f56121
+
+
 
