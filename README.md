@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project presents a web-based prototype demonstrating a "Third Ear" feature. It's specifically designed as a tool to assist contact center agents during live calls.
+This project presents a "Third Ear" web prototype, a tool designed to assist contact center agents during live calls. It aims to reduce agent burnout and enhance customer experience (CX) by minimizing back-and-forth communication.
 
 ## Issue Addressed
 
